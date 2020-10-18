@@ -10,10 +10,13 @@ Options:
   -l  --launch   Execute the compiled binary if the compilation succeeds.
 """
 
-print("aaaaaaaa")
-
 import sys
 import os
+
+def print_blue(*args, **kwargs):
+	print("\x1b[36m", end = "")
+	print(*args, **kwargs)
+	print("\x1b[39m", end = "")
 
 # Options
 def cmdline_has_option(*options):
@@ -24,7 +27,10 @@ def cmdline_has_option(*options):
 option_help = cmdline_has_option("-h", "--help")
 option_launch = cmdline_has_option("-l", "--launch")
 src_dir_name = "src"
+bin_dir_name = "bin"
+bin_name = "ports"
 
+# Help message if -h
 if option_help:
 	this_script = sys.argv[0]
 	python = "" if this_script.startswith("./") else "python3 "
@@ -39,9 +45,21 @@ for dir_name, _, file_names in os.walk(src_dir_name):
 			src_file_names.append(os.path.join(dir_name, file_name))
 
 # Call gcc
-command = ["gcc"]
+command_args = ["gcc"]
 for src_file_name in src_file_names:
 	command_args.append(src_file_name)
 command_args.append("-o")
-command_args.append(dst_dir_name + "/" + bin_name)
-command_args.append("-no-pie") # executable
+command_args.append(os.path.join(bin_dir_name, bin_name))
+command_args.append("-Wextra")
+command_args.append("-Wall")
+command_args.append("-pedantic")
+#command_args.append("-no-pie") # executable
+command = " ".join(command_args)
+print_blue(command)
+status = os.system(command)
+
+# Launch if -l
+if option_launch and status == 0:
+	os.chdir(bin_dir_name)
+	os.system("./" + bin_name)
+	os.chdir("..")
