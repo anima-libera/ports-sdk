@@ -1,0 +1,23 @@
+
+WHAT IS NEEDED:
+
+a new syntax for PARTIAL surface ports that acts as an INTERFACE
+
+proposal:
+
+	4,?,8
+
+what it does:
+
+	create a surface port named 4 on the surface of 8
+	this port is incomplete since it has no other side
+
+	when a port is created from the ohter side that is named 4 on this side,
+	then actually this incomplete port is used as an other side
+
+	that allows to connect incomplete ports before they are even created on
+	the other side, and has plenty of adventages, like justifying how special
+	ports can have an effect, and allows to import any program by simulating
+	the special spaces around it, and allows for libraries to do cool stuff,
+	etc.
+

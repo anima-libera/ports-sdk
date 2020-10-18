@@ -1,0 +1,36 @@
+
+# Linked to 0 #
+1
+
+# Create the output special ports #
+90,10,0
+91,11,0
+92,12,0
+93,13,0
+94,14,0
+95,15,0
+96,16,0
+97,17,0
+98,18,0
+99,19,0
+
+# Output an 'a' #
+2-98 2
+3-91 3 4-92 4 5-93 5 6-95 6 7-97 7
+8-99 8
+
+33,44,{
+# all possible syntax, TODO: implement ? and . #
+
+1
+2-3
+3--
+4,?,2
+4,8,2
+4,8,&
+4,8,[uwu]
+4,8,{1 2-3}
+.breakpoint
+# comment #
+
+}
