@@ -16,7 +16,7 @@ import os
 def print_blue(*args, **kwargs):
 	print("\x1b[36m", end = "")
 	print(*args, **kwargs)
-	print("\x1b[39m", end = "")
+	print("\x1b[39m", end = "", flush = True)
 
 # Options
 def cmdline_has_option(*options):
@@ -44,16 +44,20 @@ for dir_name, _, file_names in os.walk(src_dir_name):
 		if file_name.split(".")[-1] == "c":
 			src_file_names.append(os.path.join(dir_name, file_name))
 
-# Call gcc
+# Bin directory
+if not os.path.exists(bin_dir_name):
+	os.makedirs(bin_dir_name)
+
+# Build
 command_args = ["gcc"]
 for src_file_name in src_file_names:
 	command_args.append(src_file_name)
 command_args.append("-o")
 command_args.append(os.path.join(bin_dir_name, bin_name))
-command_args.append("-Wextra")
 command_args.append("-Wall")
-command_args.append("-pedantic")
-#command_args.append("-no-pie") # executable
+command_args.append("-Wextra")
+command_args.append("-pedantic") # serious project certified..
+command_args.append("-std=c99")
 command = " ".join(command_args)
 print_blue(command)
 status = os.system(command)
