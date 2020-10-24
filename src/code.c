@@ -4,12 +4,12 @@
 #include <string.h>
 #include <stdio.h>
 
-void inst_cleanup(inst_t* inst)
+static void inst_cleanup(inst_t* inst)
 {
 	(void)inst;
 }
 
-void code_initialize(code_t* code)
+void code_init(code_t* code)
 {
 	code->inst_array = NULL;
 	code->len = 0;

@@ -7,7 +7,7 @@ Usage:
 
 Options:
   -h  --help     Prints this docstring.
-  -l  --launch   Execute the compiled binary if the compilation succeeds.
+  -l  --launch   Execute the bin if compiled, with what follows as args.
 """
 
 import sys
@@ -18,14 +18,28 @@ def print_blue(*args, **kwargs):
 	print(*args, **kwargs)
 	print("\x1b[39m", end = "", flush = True)
 
+# Launch option -l
+if "-l" in sys.argv[1:]:
+	option_launch = True
+	i = sys.argv[1:].index("-l")
+elif "--launch" in sys.argv[1:]:
+	option_launch = True
+	i = sys.argv[1:].index("--launch")
+else:
+	option_launch = False
+if option_launch:
+	options = sys.argv[1:i+1]
+	launch_args = sys.argv[i+2:]
+else:
+	options = sys.argv[1:]
+
 # Options
-def cmdline_has_option(*options):
-	for option in options:
-		if option in sys.argv[1:]:
+def cmdline_has_option(*option_names):
+	for option_name in option_names:
+		if option_name in options:
 			return True
 	return False
 option_help = cmdline_has_option("-h", "--help")
-option_launch = cmdline_has_option("-l", "--launch")
 src_dir_name = "src"
 bin_dir_name = "bin"
 bin_name = "ports"
@@ -64,6 +78,13 @@ status = os.system(command)
 
 # Launch if -l
 if option_launch and status == 0:
+	launch_command_args = ["./" + bin_name]
+	for launch_arg in launch_args:
+		launch_command_args.append(launch_arg)
+	launch_command = " ".join(launch_command_args)
 	os.chdir(bin_dir_name)
-	os.system("./" + bin_name)
+	print_blue(launch_command)
+	launch_status = os.system(launch_command) >> 8
 	os.chdir("..")
+	if launch_status != 0:
+		print_blue("exit status {}".format(launch_status))
