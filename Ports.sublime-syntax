@@ -1,0 +1,132 @@
+%YAML 1.2
+---
+name: Ports
+file_extensions: [ports, Ports, PORTS]
+scope: source.ports
+# version 0.2.0
+
+contexts:
+
+  comment:
+    - match: '#'
+      scope: punctuation.definition.comment.begin.ports
+      push: comment_block
+
+  comment_block:
+    - meta_scope: comment.block.ports
+    - match: '#'
+      scope: punctuation.definition.comment.end.ports
+      pop: true
+
+  instruction:
+    - include: cut_a
+    - include: link_a
+    - include: create_a
+    - include: debug_a
+    - include: preprocessor_a
+    - match: '[0-9]+'
+      scope: meta.function-call.ports entity.name.function.ports variable.function.ports
+
+  cut_a:
+    - match: '([0-9]+)\s*(--)'
+      captures:
+        1: variable.ports
+        2: keyword.operator.assignment.ports
+
+  link_a:
+    - match: '([0-9]+)\s*(-)'
+      captures:
+        1: variable.ports
+        2: keyword.operator.assignment.ports
+      push: link_b
+  link_b:
+    - include: comment
+    - match: '[0-9]+'
+      scope: variable.ports
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.ports
+      pop: true
+
+  create_a:
+    - match: '([0-9]+)\s*(,)'
+      captures:
+        1: meta.interface.ports entity.name.ports entity.name.function.ports
+        2: keyword.operator.ports
+      push: create_b
+  create_b:
+    - include: comment
+    - match: '([0-9]+)\s*(,)'
+      captures:
+        1: meta.interface.ports entity.name.ports entity.name.function.ports
+        2: keyword.operator.ports
+      set: create_c
+    - match: '(\?)\s*(,)'
+      captures:
+        1: keyword.declaration.interface.ports
+        2: keyword.operator.ports
+      set: create_c
+    - match: '\S'
+      scope: invalid.illegal.ports
+      pop: true
+  create_c:
+    - include: comment
+    - match: '[0-9]+'
+      scope: variable.ports
+      pop: true
+    - match: '&'
+      scope: variable.language.ports
+      pop: true
+    - match: '\['
+      scope: punctuation.definition.string.begin.ports
+      set: bracket_string
+    - match: '{'
+      scope: punctuation.section.braces.begin.ports
+      set: block
+    - match: '\S'
+      scope: invalid.illegal.ports
+      pop: true
+
+  bracket_string:
+    - meta_scope: meta.preprocessor.include.ports string.other.ports
+    - match: ']'
+      scope: punctuation.definition.string.end.ports
+      pop: true
+
+  block:
+    - match: '}'
+      scope: punctuation.section.braces.end.ports
+      pop: true
+    - include: main
+
+  debug_a:
+    - match: '\.'
+      scope: keyword.operator.ports
+      push: debug_b
+  debug_b:
+    - include: comment
+    - match: '[0-9]+|[a-z]+'
+      scope: constant.language.ports keyword.other.ports
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.ports
+      pop: true
+
+  preprocessor_a:
+    - match: '\/'
+      scope: keyword.operator.ports meta.preprocessor.ports
+      push: preprocessor_b
+  preprocessor_b:
+    - include: comment
+    - match: '[a-z]+'
+      scope: keyword.other.ports meta.preprocessor.ports
+      pop: true
+    - match: '\S'
+      scope: invalid.illegal.ports
+      pop: true
+
+  main:
+    - include: comment
+    - include: instruction
+    - match: '\S'
+      scope: invalid.illegal.ports
