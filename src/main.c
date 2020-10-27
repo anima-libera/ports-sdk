@@ -6,16 +6,20 @@
 #include <assert.h>
 
 /* ABREVIATION TABLE
- * alloc allocate, allocated
- * cap   capacity
- * dyn   dynamic
- * init  initialize, initialization, initial
- * inst  instruction
- * la    link array
- * len   length
- * pa    port array
- * pn    port name
- * psdk  ports software development kit
+ * alloc  allocate, allocated
+ * cap    capacity
+ * cs     character stream
+ * dyn    dynamic
+ * init   initialize, initialization, initial
+ * inst   instruction
+ * la     link array
+ * len    length
+ * os     other side
+ * pa     port array
+ * pn     port name
+ * psdk   ports software development kit
+ * spec   special
+ * surf   surface
  */
 
 int main(void)
