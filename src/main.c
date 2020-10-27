@@ -1,5 +1,7 @@
 
 #include "code.h"
+#include "space.h"
+#include "interp.h"
 #include <stdio.h>
 #include <assert.h>
 
@@ -20,20 +22,98 @@ int main(void)
 {
 	code_t code;
 	code_init(&code);
-	
-	for (int i = 0; i < 20; i++)
+
+	inst_t* inst;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_LINK;
+	inst->dyn.link.pn_a = 2;
+	inst->dyn.link.pn_b = 8;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_LINK;
+	inst->dyn.link.pn_a = 5;
+	inst->dyn.link.pn_b = 9;
+
+	for (int i = 1; i <= 10; i++)
 	{
-		inst_t* inst = code_alloc_inst(&code);
+		inst = code_alloc_inst(&code);
 		inst->type = INST_PORT;
 		inst->dyn.port.name = i;
 	}
 
-	for (int i = 0; i < 20; i++)
-	{
-		assert((int)code.inst_array[i].dyn.port.name == i);
-	}
+	inst = code_alloc_inst(&code);
+	inst->type = INST_LINK;
+	inst->dyn.link.pn_a = 400;
+	inst->dyn.link.pn_b = 800;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_CUT;
+	inst->dyn.cut.pn = 800;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_PORT;
+	inst->dyn.port.name = 400;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_DEBUGACT;
+	inst->dyn.debugact.number = 7;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_PORT;
+	inst->dyn.port.name = 800;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_DEBUGACT;
+	inst->dyn.debugact.number = 1;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_DEBUGACT;
+	inst->dyn.debugact.number = 8;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_LINK;
+	inst->dyn.link.pn_a = 900;
+	inst->dyn.link.pn_b = 0;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_PORT;
+	inst->dyn.port.name = 900;
+
+	inst = code_alloc_inst(&code);
+	inst->type = INST_DEBUGACT;
+	inst->dyn.debugact.number = 2;
+
+	code_interp(&code);
+
+	#if 0
 
 	printf("a\n");
+
+	space_t space;
+	port_t* init_port = space_init(&space, &code, 0);
+	init_port->type = PORT_SPEC;
+	init_port->dyn.spec.os_pn = 0;
+
+	printf("b\n");
+
+	for (int i = 10; i <= 19; i++)
+	{
+		port_t* port = space_alloc_port(&space);
+		port->name = i;
+		port->type = PORT_SPEC;
+		port->dyn.spec.os_pn = i;
+		port->link = NULL_PN;
+	}
+
+	for (int i = 0; i < space.pa_len; i++)
+	{
+		printf("%2d -> %2d\n", (int)space.pa[i].name, (int)space.pa[i].link);
+	}
+
+	space_cleanup(&space);
+
+	#endif
 
 	code_cleanup(&code);
 	return 0;

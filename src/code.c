@@ -47,11 +47,3 @@ inst_t* code_alloc_inst(code_t* code)
 	}
 	return &code->inst_array[code->len++];
 }
-
-#if 0
-void code_add_inst(code_t* code, inst_t* inst)
-{
-	inst_t* allocated_inst = code_alloc_inst(code);
-	memcpy(allocated_inst, inst, sizeof(inst_t));
-}
-#endif
