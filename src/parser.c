@@ -4,6 +4,7 @@
 
 void cs_init_from_filepath(cs_t* cs, const char* filepath)
 {
+	printf("read file %s\n", filepath);
 	cs->file = fopen(filepath, "r");
 	if (cs->file == NULL)
 	{
@@ -35,16 +36,24 @@ void cs_discard_char(cs_t* cs)
 
 void cs_skip_skippable(cs_t* cs)
 {
-	int is_in_comment = 0;
-	char c;
-	while ((c = cs_peek_char(cs)),
-		c == ' ' || c == '\n' || c == '\t' || c == '\r' || is_in_comment)
+	int comment_mode = 0;
+	while (1)
 	{
-		if (c == '#')
+		char c = cs_peek_char(cs);
+		if (c == '#' && !comment_mode)
 		{
-			is_in_comment = !is_in_comment;
+			comment_mode = 1;
 		}
-		else if (c == '\0' && is_in_comment)
+		else if (c != ' ' && c != '\n' && c != '\t' && c != '\r' &&
+			!comment_mode)
+		{
+			break;
+		}
+		else if (c == '#' && comment_mode)
+		{
+			comment_mode = 0;
+		}
+		else if (c == '\0' && comment_mode)
 		{
 			/* TODO
 			 * handle error */

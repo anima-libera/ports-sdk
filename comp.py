@@ -84,7 +84,8 @@ if option_launch and status == 0:
 	launch_command = " ".join(launch_command_args)
 	os.chdir(bin_dir_name)
 	print_blue(launch_command)
-	launch_status = os.system(launch_command) >> 8
+	launch_status_raw = os.system(launch_command)
+	launch_status = launch_status_raw >> 8
 	os.chdir("..")
 	if launch_status != 0:
 		print_blue("exit status {}".format(launch_status))

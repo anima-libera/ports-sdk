@@ -1,4 +1,5 @@
 
+#include "parser.h"
 #include "code.h"
 #include "space.h"
 #include "interp.h"
@@ -22,8 +23,27 @@
  * surf   surface
  */
 
-int main(void)
+int main(int argc, const char** argv)
 {
+	if (argc <= 1)
+	{
+		/* TODO
+		 * say something*/
+		return 2;
+	}
+	cs_t cs;
+	
+	cs_init_from_filepath(&cs, argv[1]);
+
+	cs_skip_skippable(&cs);
+	printf("%d\n", (int)cs_parse_name(&cs));
+	cs_skip_skippable(&cs);
+	printf("%d\n", (int)cs_parse_name(&cs));
+
+	cs_cleanup(&cs);
+
+	#if 0
+
 	code_t code;
 	code_init(&code);
 
@@ -120,5 +140,8 @@ int main(void)
 	#endif
 
 	code_cleanup(&code);
+
+	#endif
+
 	return 0;
 }
