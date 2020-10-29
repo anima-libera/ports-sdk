@@ -57,7 +57,8 @@ void cs_skip_skippable(cs_t* cs)
 		{
 			/* TODO
 			 * handle error */
-			fprintf(stderr, "error unfinisehd comment u ocaml programmer\n");
+			fprintf(stderr,
+				"error unfinisehd comment u functionnal programmer\n");
 		}
 		cs_discard_char(cs);
 	}
