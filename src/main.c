@@ -35,24 +35,22 @@ int main(int argc, const char** argv)
 	
 	cs_init_from_filepath(&cs, argv[1]);
 
-	#if 0
-	cs_skip_skippable(&cs);
-	cs_discard_char(&cs);
-	printf("%d\n", cs_parse_number(&cs));
-	cs_skip_skippable(&cs);
-	cs_discard_char(&cs);
-	printf("%d\n", cs_parse_number(&cs));
-	#endif
 
-	inst_t inst;
+	code_t code;
+	code_init(&code);
 
-	cs_parse_inst(&cs, &inst);
-	printf("%d\n", inst.dyn.debugact.number);
-
-	cs_parse_inst(&cs, &inst);
-	printf("%d\n", inst.dyn.debugact.number);
+	while (cs_parse_inst(&cs, &code) == 0)
+	{
+		#if 0
+		printf("%d\n", inst.dyn.debugact.number);
+		#endif
+	}
 
 	cs_cleanup(&cs);
+
+	code_interp(&code);
+
+	code_cleanup(&code);
 
 	#if 0
 

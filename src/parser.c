@@ -77,7 +77,7 @@ int cs_parse_number(cs_t* cs)
 	return number;
 }
 
-int cs_parse_inst(cs_t* cs, inst_t* inst)
+int cs_parse_inst(cs_t* cs, code_t* code)
 {
 	cs_skip_skippable(cs);
 	char c = cs_peek_char(cs);
@@ -91,6 +91,7 @@ int cs_parse_inst(cs_t* cs, inst_t* inst)
 		cs_discard_char(cs);
 		cs_skip_skippable(cs);
 		int number = cs_parse_number(cs);
+		inst_t* inst = code_alloc_inst(code);
 		inst->type = INST_DEBUGACT;
 		inst->dyn.debugact.number = number;
 		return 0;
