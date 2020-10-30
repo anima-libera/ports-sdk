@@ -8,6 +8,7 @@
 
 /* ABREVIATION TABLE
  * alloc  allocate, allocated
+ * beg    beginning
  * cap    capacity
  * cs     character stream
  * dyn    dynamic

@@ -77,14 +77,61 @@ int cs_parse_number(cs_t* cs)
 	return number;
 }
 
+int char_is_inst_beg(char c)
+{
+	return ('0' <= c && c <= '9') || c == '.' || c == '\0' || c == '}';
+}
+
 int cs_parse_inst(cs_t* cs, code_t* code)
 {
 	cs_skip_skippable(cs);
-	char c = cs_peek_char(cs);
+	char c;
+	c = cs_peek_char(cs);
 	if ('0' <= c && c <= '9')
 	{
-		/* normal instruction */
-		return 0;
+		int n1 = cs_parse_number(cs);
+		cs_skip_skippable(cs);
+		c = cs_peek_char(cs);
+		if (char_is_inst_beg(c))
+		{
+			inst_t* inst = code_alloc_inst(code);
+			inst->type = INST_PORT;
+			inst->dyn.port.name = n1;
+			return 0;
+		}
+		else if (c == '-')
+		{
+			cs_discard_char(cs);
+			c = cs_peek_char(cs);
+			if (c == '-')
+			{
+				cs_discard_char(cs);
+				inst_t* inst = code_alloc_inst(code);
+				inst->type = INST_CUT;
+				inst->dyn.cut.pn = n1;
+				return 0;
+			}
+			else if (cs_skip_skippable(cs), c = cs_peek_char(cs),
+				'0' <= c && c <= '9')
+			{
+				int n2 = cs_parse_number(cs);
+				inst_t* inst = code_alloc_inst(code);
+				inst->type = INST_LINK;
+				inst->dyn.link.pn_a = n1;
+				inst->dyn.link.pn_b = n2;
+				return 0;
+			}
+			else
+			{
+				printf("error unexpected %c\n", c);
+				return 3;
+			}
+		}
+		else
+		{
+			printf("error unexpected %c\n", c);
+			return 3;
+		}
 	}
 	else if (c == '.')
 	{
@@ -98,6 +145,10 @@ int cs_parse_inst(cs_t* cs, code_t* code)
 	}
 	else if (c == '/')
 	{
+		/* TODO
+		 * actually a perprocessor directive isn't an instruction at all, 
+		 * this should probably be handeled elsewhere */
+
 		/* preprocessor */
 		return 0;
 	}

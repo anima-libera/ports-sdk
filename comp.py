@@ -72,6 +72,8 @@ command_args.append("-Wall")
 command_args.append("-Wextra")
 command_args.append("-pedantic") # serious project certified..
 command_args.append("-std=c99")
+#command_args.append("-fno-stack-protector")
+command_args.append("-O2")
 command = " ".join(command_args)
 print_blue(command)
 status = os.system(command)

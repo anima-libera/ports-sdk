@@ -19,6 +19,7 @@ void cs_discard_char(cs_t* cs);
 
 void cs_skip_skippable(cs_t* cs);
 int cs_parse_number(cs_t* cs);
+int cs_is_inst_beg(cs_t* cs);
 
 /* Prases and pops the next instruction of the given cs (if any), and append it
  * to the given code.
