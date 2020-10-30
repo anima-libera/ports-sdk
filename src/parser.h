@@ -18,7 +18,9 @@ char cs_peek_char(cs_t* cs);
 void cs_discard_char(cs_t* cs);
 
 void cs_skip_skippable(cs_t* cs);
+int cs_parse_number(cs_t* cs);
 
-uint32_t cs_parse_name(cs_t* cs);
+/* Prases and pops the next instruction of the given cs. */
+int cs_parse_inst(cs_t* cs, inst_t* inst);
 
 #endif /* __PSDK_PARSER_HEADER__ */

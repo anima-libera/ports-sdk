@@ -30,7 +30,7 @@
 4,8,&
 4,8,[uwu]
 4,8,{1 2-3}
-.breakpoint
+.breakpoint .1
 /preprocessor
 # comment #
 
